@@ -17,10 +17,10 @@ let config = {
         // 加载器
         loaders: [
             // 解析.vue文件
-            // {
-            //     test: /\.vue$/,
-            //     loader: 'vue'
-            // },
+            {
+                test: /\.vue$/,
+                loader: 'vue'
+            },
             // 转化ES6的语法
             {
                 test: /\.(js|es6)$/,
@@ -94,19 +94,14 @@ let config = {
     //         js: 'babel'
     //     }
     // },
-    // 配置babel转化成es5的语法
-    // babel: {
-    //     presets: ['es2015', 'stage-0'],
-    //     plugins: ['transform-runtime', 'transform-object-assign']
-    // },
-    // resolve: {
-    //     // require时省略的扩展名，如：require('module') 不需要module.js
-    //     extensions: ['', '.js', '.less', '.es6', '.vue', '.html'],
-    //     // 别名，可以直接使用别名来代表设定的路径以及其他
-    //     alias: {
-    //
-    //     }
-    // },
+    resolve: {
+        // require时省略的扩展名，如：require('module') 不需要module.js
+        extensions: ['', '.js', '.less', '.es6', '.vue', '.html'],
+        // 别名，可以直接使用别名来代表设定的路径以及其他
+        alias: {
+
+        }
+    },
     //sourece-map
     devtool: "source-map",
     plugins: [
