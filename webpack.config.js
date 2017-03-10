@@ -1,6 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+let ExtractTextPlugin = require("extract-text-webpack-plugin");
+let extractCSS = new ExtractTextPlugin('stylesheets/css.css',{
+    allChunks: true
+});
+let extractLESS = new ExtractTextPlugin('stylesheets/common.less',{
+    allChunks: true
+});
 
 let config = {
     entry: {
@@ -10,7 +17,7 @@ let config = {
         path: path.join(__dirname, 'dist'),
         publicPath: './',
         filename: 'js/[name].js',
-        // chunkFilename: 'lib/[id].bundle.js'
+        chunkFilename: 'lib/[id].bundle.js'
     },
     //加载器
     module: {
@@ -26,30 +33,23 @@ let config = {
                 test: /\.(js|es6)$/,
                 exclude: /node_modules/,
                 loader: 'babel',
-                query: {
-                    'presets': ['babel-preset-es2015','babel-preset-stage-2'],
-                    'plugins': ['transform-runtime']
-
-                }
             },
             // 编译css并自动添加css前缀
             {
                 test: /\.css$/,
-                loaders: [
-                    'style',
+                loader: extractCSS.extract('style',[
                     'css?importLoaders=1',
                     'postcss-loader?sourceMap=inline'
-                ]
+                ].join('!'))
             },
             //.less 文件想要编译，scss就需要这些东西！来编译处理
             {
                 test: /\.less$/,
-                loaders: [
-                    'style',
+                loader: extractLESS.extract('style', [
                     'css?importLoaders=1',
                     'postcss-loader?sourceMap=inline',
                     'less'
-                ],
+                ].join('!')),
             },
             // 图片转化，小于8K自动转化为base64的编码
             {
@@ -83,17 +83,29 @@ let config = {
             require('autoprefixer')
         ];
     },
-    less:{
-      sourceMap: true
+    //babel需要提出来配置，因为有两处都将用到
+    babel: {
+        'presets': ['babel-preset-es2015','babel-preset-stage-2'],
+        'plugins': ['transform-runtime']
+
     },
     // .vue的配置。需要单独出来配置
-    // vue: {
-    //     loaders: {
-    //         css: VueCSSExtractPlugin.extract('style-loader', 'css!autoprefixer'),
-    //         less: VueCSSExtractPlugin.extract('style-loader', 'css!autoprefixer!less'),
-    //         js: 'babel'
-    //     }
-    // },
+    vue: {
+        loaders: {
+
+            css: extractCSS.extract('style',[
+                    'css?importLoaders=1',
+                    'postcss-loader?sourceMap=inline'
+                 ].join('!')),
+
+            less: extractCSS.extract('style',[
+                    'css?importLoaders=1',
+                    'postcss-loader?sourceMap=inline'
+                ].join('!')),
+
+            js: 'babel'
+        }
+    },
     resolve: {
         // require时省略的扩展名，如：require('module') 不需要module.js
         extensions: ['', '.js', '.less', '.es6', '.vue', '.html'],
@@ -103,14 +115,20 @@ let config = {
         }
     },
     //sourece-map
-    devtool: "source-map",
+    // devtool: "source-map",
     plugins: [
+
+        //自动生成html文件
         new HtmlWebpackPlugin({
             title: 'test',
             template: '-!ejs!./src/test/app.tpl',
             filename: 'name.html',
             inject: true
         }),
+
+        //提取CSS，LESS
+        extractCSS,
+        extractLESS
     ]
 
 };
