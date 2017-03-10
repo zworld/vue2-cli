@@ -70,10 +70,10 @@ let config = {
                     name: '/fonts/[name].[ext]'
                 }
             },
-            //html模板编译？
+            // html模板编译
             {
                 test: /\.(html|tpl)$/,
-                loader: 'html-loader'
+                loader: 'html'
             }
         ]
     },
@@ -99,7 +99,7 @@ let config = {
         extensions: ['', '.js', '.less', '.es6', '.vue', '.html'],
         // 别名，可以直接使用别名来代表设定的路径以及其他
         alias: {
-
+            'vue': 'vue/dist/vue.js'
         }
     },
     //sourece-map
@@ -107,7 +107,7 @@ let config = {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'test',
-            template: 'src/test/app.tpl',
+            template: '-!ejs!./src/test/app.tpl',
             filename: 'name.html',
             inject: true
         }),
