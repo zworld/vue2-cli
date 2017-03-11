@@ -11,7 +11,7 @@ let extractLESS = new ExtractTextPlugin('stylesheets/common.less',{
 
 let config = {
     entry: {
-        app: path.join(__dirname,'./src/test/app.es6'),
+        app: path.join(__dirname,'./src/app.es6'),
     },
     output: {
         path: path.join(__dirname, 'dist'),
@@ -45,7 +45,7 @@ let config = {
             //.less 文件想要编译，scss就需要这些东西！来编译处理
             {
                 test: /\.less$/,
-                loader: extractLESS.extract('style', [
+                loader: extractCSS.extract('style', [
                     'css?importLoaders=1',
                     'postcss-loader?sourceMap=inline',
                     'less'
@@ -121,8 +121,8 @@ let config = {
         //自动生成html文件
         new HtmlWebpackPlugin({
             title: 'test',
-            template: '-!ejs!./src/test/app.tpl',
-            filename: 'name.html',
+            template: '-!ejs!./src/app.tpl',
+            filename: 'app.html',
             inject: true
         }),
 
